@@ -10,49 +10,62 @@
 
 using namespace std;
 
-void constroi_solucao(int n, vector<int>& s, float **distancia)
-{
+void constroi_solucao(int n, vector<int> &s, float **distancia) {
     s.clear(); // limpa solucao
     //insere todas cidades sequencialmente
-    for (int j=0; j < n; j++) s.push_back(j);
+    for (int j = 0; j < n; j++) s.push_back(j);
 }
 
 /* Constroi uma solucao de forma gulosa, no caso,
    implementa o Metodo construtivo do vizinho mais proximo */
-void constroi_solucao_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float **d)
-{
-  vector<int> nao_visitada; //lista das cidades ainda nao visitadas
+void constroi_solucao_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float **d) {
+    vector<int> nao_visitada; //lista das cidades ainda nao visitadas
 
-  // inserir um elemento no final de uma lista
-  for(int i = 1; i < n; i++)
-    nao_visitada.push_back(i);
 
-  s.clear(); // limpa solucao
-  s.push_back(0); // A cidade de origem é a cidade 0
+    // inserir um elemento no final de uma lista
+    for (int i = 1; i < n; i++)
+        nao_visitada.push_back(i);
 
-  int mais_proxima; // armazena a cidade mais proxima para inserir na solucao
-  float dist; // armazena a menor distancia
 
-/*
-	Implementar o loop do metodo construtivo, 
-	inserindo sempre a cidade mais proxima ainda
-	nao visitada na solucao.
-*/
-	
+    s.clear(); // limpa solucao
+    int origem = 0;
+    s.push_back(origem); // A cidade de origem é a cidade 0
+
+    int mais_proxima = origem; // armazena a cidade mais proxima para inserir na solucao
+    vector<int>::iterator mais_proxima_pos;
+    float dist = INT16_MAX; // armazena a menor distancia
+
+    vector<int>::iterator ptr;
+
+    while (!nao_visitada.empty()) { // enquanto tiver elementos para visitar
+        for (ptr = nao_visitada.begin(); ptr < nao_visitada.end(); ptr++) { // visite os vizinhos
+            if (mais_proxima == *ptr) { //  se for igual ao atual ou ja estiver na solucao
+                continue;
+            }
+            if (dist > d[mais_proxima][*ptr]) { // menor valor
+                dist = d[mais_proxima][*ptr];
+                mais_proxima = *ptr;
+                mais_proxima_pos = ptr;
+            }
+        }
+        s.push_back(mais_proxima); // inclui na solucao
+        dist = INT16_MAX;
+        nao_visitada.erase(mais_proxima_pos);
+    }
+
+
 }
 
 
-
 /* Constroi uma solucao de forma aleatoria */
-void constroi_solucao_aleatoria(int n, vector<int> &s, float **d)
-{
+void constroi_solucao_aleatoria(int n, vector<int> &s, float **d) {
 
     constroi_solucao(n, s, d);
 
     //Para c++ 11
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine rand_seed(seed);
-    shuffle ( s.begin(), s.end(), rand_seed );
+    shuffle(s.begin(), s.end(), rand_seed);
 
     //Para c++ 98
     //random_shuffle ( s.begin(), s.end() );
@@ -60,14 +73,13 @@ void constroi_solucao_aleatoria(int n, vector<int> &s, float **d)
 }
 
 /* Constroi uma solucao pela insercao mais barata */
-void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, float **d)
-{
+void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, float **d) {
     vector<int> nao_visitada;
 
     /* Inicio da Fase de Construcao de uma solucao */
     cout << "\n Construindo nova solucao ...\n";
 
-    for (int i=1; i<n; i++){
+    for (int i = 1; i < n; i++) {
 
         /* vou inserir um registro no final de uma lista  */
         nao_visitada.push_back(i);
@@ -87,14 +99,14 @@ void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, float *
 
     /* Insere as duas proximas cidades pela heuristica do vizinho mais proximo */
 
-    while ( j < 3){
+    while (j < 3) {
         dist = INT_MAX;
         int i = 0;
         int pos_i = 0;
 
         while (i < nao_visitada.size()) {
-            if (d[s->at(j-1)][nao_visitada[i]] < dist){
-                dist = d[s->at(j-1)][nao_visitada[i]];
+            if (d[s->at(j - 1)][nao_visitada[i]] < dist) {
+                dist = d[s->at(j - 1)][nao_visitada[i]];
                 mais_proxima = nao_visitada[i];
                 pos_i = i;
             }
@@ -109,60 +121,59 @@ void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, float *
     }
 
 
-   /* Formada uma subrota inicial com tres cidades, aplicar o metodo da
-      insercao mais barata para decidir qual cidade inserir entre cada
-      par de cidades i e j. A cidade k escolhida sera aquela que minimizar
-      custo(k) = d(i,k) + d(k,j) - d(i,j) */
+    /* Formada uma subrota inicial com tres cidades, aplicar o metodo da
+       insercao mais barata para decidir qual cidade inserir entre cada
+       par de cidades i e j. A cidade k escolhida sera aquela que minimizar
+       custo(k) = d(i,k) + d(k,j) - d(i,j) */
 
     while (j < n) {
-      melhor_sij = INT_MAX;
+        melhor_sij = INT_MAX;
 
-      int k = 0;
-      int pos_k;
-      /* Calcula os custos para cada cidade k ser inserida entre as cidades i e j */
-      while (k < nao_visitada.size()) {
-        cid_k = nao_visitada[k];
-        for (int i = 0; i < j; i++) {
-	      cid_i = s->at(i);
-          if ((i+1) != j) cid_j = s->at(i+1);
-          else cid_j = 0;
+        int k = 0;
+        int pos_k;
+        /* Calcula os custos para cada cidade k ser inserida entre as cidades i e j */
+        while (k < nao_visitada.size()) {
+            cid_k = nao_visitada[k];
+            for (int i = 0; i < j; i++) {
+                cid_i = s->at(i);
+                if ((i + 1) != j) cid_j = s->at(i + 1);
+                else cid_j = 0;
 
-          sij = d[cid_i][cid_k] + d[cid_k][cid_j] - d[cid_i][cid_j];
+                sij = d[cid_i][cid_k] + d[cid_k][cid_j] - d[cid_i][cid_j];
 
-          if (sij < melhor_sij) {
- 	        melhor_i = cid_i;
-            //melhor_j = cid_j;
-            melhor_k = cid_k;
-            melhor_sij = sij;
-            pos = i + 1;
-            pos_k = k;
-          }
+                if (sij < melhor_sij) {
+                    melhor_i = cid_i;
+                    //melhor_j = cid_j;
+                    melhor_k = cid_k;
+                    melhor_sij = sij;
+                    pos = i + 1;
+                    pos_k = k;
+                }
+            }
+            k++;
         }
-        k++;
-      }
 
-      /* Adiciona cada nova cidade k entre as cidades i e j que produzir a insercao mais barata */
-      //insere_meio_vetor(s,melhor_k,pos,j);
-      s->insert(s->begin()+pos,melhor_k);
+        /* Adiciona cada nova cidade k entre as cidades i e j que produzir a insercao mais barata */
+        //insere_meio_vetor(s,melhor_k,pos,j);
+        s->insert(s->begin() + pos, melhor_k);
 
-      //imprime_rota(s,n);
+        //imprime_rota(s,n);
 
-      /* Apaga a cidade mais barata da lista de nao visitadas */
+        /* Apaga a cidade mais barata da lista de nao visitadas */
         nao_visitada.erase(nao_visitada.begin() + pos_k);
 
-      j++;
+        j++;
     }
 }
 
 /* Constroi uma solucao parcialmente gulosa pelo metodo do vizinho mais proximo */
-void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float **d, float alpha)
-{
+void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float **d, float alpha) {
 
-    vector<int> nao_visitadas; 
+    vector<int> nao_visitadas;
     int tamanho_LC;
 
     /* Inicio da Fase de Construcao de uma solucao */
-    for (int i=1; i<n; i++){
+    for (int i = 1; i < n; i++) {
 
         /* vou inserir um registro no final de uma lista das cidades nao visitadas */
         nao_visitadas.push_back(i);
@@ -173,7 +184,7 @@ void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int
     s.clear();
     s.push_back(0);  /* A cidade origem � a cidade 0 */
 
-    
+
     //Ordena lista
     ordena_dist_crescente ordem;
     ordem.d = d; // fornece a matriz de distancia para usar na ordenacao
@@ -185,35 +196,34 @@ void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int
 
     int j = 1;
     int cidade_escolhida;
-    while (j < n){
+    while (j < n) {
 
-      tamanho_LC = nao_visitadas.size();
-      //printf("Tamanho da lista de candidatos = %d \n",tamanho_LC);
+        tamanho_LC = nao_visitadas.size();
+        //printf("Tamanho da lista de candidatos = %d \n",tamanho_LC);
 
-      //alpha = 0;
-      int tamanho_LRC = MAX(1, alpha * tamanho_LC);
+        //alpha = 0;
+        int tamanho_LRC = MAX(1, alpha * tamanho_LC);
 
-      //printf("Tamanho da lista restrita de candidatos = %d \n",tamanho_LRC);
-      int posicao_escolhida = rand()%tamanho_LRC;
-      cidade_escolhida = nao_visitadas[posicao_escolhida];
-      //printf("Cidade escolhida = %d \n",cidade_escolhida);
+        //printf("Tamanho da lista restrita de candidatos = %d \n",tamanho_LRC);
+        int posicao_escolhida = rand() % tamanho_LRC;
+        cidade_escolhida = nao_visitadas[posicao_escolhida];
+        //printf("Cidade escolhida = %d \n",cidade_escolhida);
 
-      /* Insere a cidade escolhida apos a ultima cidade inserida*/
-      s.push_back(cidade_escolhida);
-      /* Apaga a cidade escolhida da lista de nao visitadas */
-      nao_visitadas.erase(nao_visitadas.begin()+posicao_escolhida);
+        /* Insere a cidade escolhida apos a ultima cidade inserida*/
+        s.push_back(cidade_escolhida);
+        /* Apaga a cidade escolhida da lista de nao visitadas */
+        nao_visitadas.erase(nao_visitadas.begin() + posicao_escolhida);
 
         /* Ordenando a lista de cidade nao visitadas */
-      ordem.index = cidade_escolhida; //atualiza ultima cidade inserida
-      sort(nao_visitadas.begin(), nao_visitadas.end());  //ordena pelos indices (para manter a estabilidade)
-      stable_sort(nao_visitadas.begin(), nao_visitadas.end(), ordem); //ordena pelas distancias
+        ordem.index = cidade_escolhida; //atualiza ultima cidade inserida
+        sort(nao_visitadas.begin(), nao_visitadas.end());  //ordena pelos indices (para manter a estabilidade)
+        stable_sort(nao_visitadas.begin(), nao_visitadas.end(), ordem); //ordena pelas distancias
 
-      j++;
+        j++;
     }
 }
 
 /* Constroi uma solucao parcialmente gulosa com base no metodo da insercao mais barata */
-void constroi_solucao_parcialmente_gulosa_insercao_mais_barata(int n, vector<int> &s, float **d, float alpha)
-{
+void constroi_solucao_parcialmente_gulosa_insercao_mais_barata(int n, vector<int> &s, float **d, float alpha) {
 
 }
