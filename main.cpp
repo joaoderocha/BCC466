@@ -13,6 +13,7 @@
 #include "src/Construcao.h"
 #include "src/Menus.h"
 #include "src/Descida.h"
+#include "src/MS.h"
 
 //---------------------------------------------------------------------------
 using namespace std;
@@ -104,7 +105,7 @@ int main(int argc, char *argv[]) {
 
             case 3: /* Descida Randomica */
                 inicio_CPU = clock();
-                fo = descida_randomica(n, s, d, n^2);
+                fo = descida_randomica(n, s, d, n ^ 2);
                 fim_CPU = clock();
                 printf("\nSolucao obtida usando a estrategia First Improvement do Metodo da Descida:\n");
                 imprime_rota(s, n);
@@ -123,7 +124,13 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 5: /* Multi-Start */
-                printf("Nao implementado\n");
+                inicio_CPU = clock();
+                fo = MS(n, s, d, 10*n);
+                fim_CPU = clock();
+                printf("\nSolucao obtida usando a estrategia Multi-Start:\n");
+                imprime_rota(s, n);
+                printf("Funcao objetivo = %f\n", fo);
+                printf("Tempo de CPU = %f segundos:\n", (double) (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC);
                 break;
 
             case 6: /* Simulated Annealing */
