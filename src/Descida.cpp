@@ -10,6 +10,8 @@
 #include "Descida.h"
 #include "Util.h"
 
+vector<int> getShuffledVector(int n);
+
 using namespace std;
 
 float calcula_delta(int n, vector<int> &s, float **d, int i, int j) {
@@ -65,33 +67,16 @@ float melhor_vizinho(int n, vector<int> &s, float **d, float fo, int *melhor_i, 
 
 }//melhor_vizinho
 
-float first_improvement(int n, vector<int> &s, float **d, float fo, const int i, int *melhor_j) {
-    float fo_melhor_viz = fo;
 
-    float fo_viz;
-    for (int j = i + 1; j < n; j++) {
-        // Calcula a variacao de custo com a realizacao do movimento
-        float delta1 = calcula_delta(n, s, d, i, j);
+vector<int> getShuffledVector(int n) {
+    vector<int> aux;
+    aux.reserve(n);
+    for (int j = 0; j < n; j++) aux.push_back(j);
 
-        // Faz o movimento
-        swap(s[i], s[j]);
-
-        float delta2 = calcula_delta(n, s, d, i, j);
-
-        // Calcular a nova distancia
-        fo_viz = fo - delta1 + delta2;
-
-        // Armazenar o melhor movimento (melhor troca)
-        if (fo_viz < fo_melhor_viz) {
-            *melhor_j = j;
-            return fo_viz;
-        }
-
-        // desfaz o movimento
-        swap(s[i], s[j]);
-    }
-
-    return fo_melhor_viz;
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine rand_seed(seed);
+    shuffle(aux.begin(), aux.end(), rand_seed);
+    return aux;
 }
 
 //Vizinho aleatorio usado nas descidas e algumas meta-heurisiticas
@@ -101,7 +86,7 @@ float vizinho_aleatorio(int n, vector<int> &s, float **d, float fo, int *melhor_
     float delta1, delta2;
     i = rand() % (n - 1);
     j = rand() % (n - 1);
-    while(i == j)
+    while (i == j)
         j = rand() % (n - 1);
     delta1 = calcula_delta(n, s, d, i, j);
 
@@ -123,42 +108,12 @@ float vizinho_aleatorio(int n, vector<int> &s, float **d, float fo, int *melhor_
 
 }//vizinho_aleatorio 
 
-float best_improvement(int n, vector<int> &s, float **d, float fo, const int i, int *melhor_j) {
-    float fo_melhor_viz = fo;
-
-    float fo_viz;
-
-
-    for (int j = i + 1; j < n; j++) {
-        // Calcula a variacao de custo com a realizacao do movimento
-        float delta1 = calcula_delta(n, s, d, i, j);
-
-        // Faz o movimento
-        swap(s[i], s[j]);
-
-        float delta2 = calcula_delta(n, s, d, i, j);
-
-        // Calcular a nova distancia
-        fo_viz = fo - delta1 + delta2;
-
-        // Armazenar o melhor movimento (melhor troca)
-        if (fo_viz < fo_melhor_viz) {
-            *melhor_j = j;
-            fo_melhor_viz = fo_viz;
-        }
-
-        // desfaz o movimento
-        swap(s[i], s[j]);
-    }
-
-    return fo_melhor_viz;
-}
 
 /* Método da descida com estrategia best improvement */
 float descida_best_improvement(int n, vector<int> &s, float **d) {
     int melhor_i, melhor_j, iter;
     float fo_viz, fo;
-    bool melhorou;
+    bool deve_continuar = true;
     clock_t inicio_CPU, fim_CPU;
 
     fo = fo_viz = calcula_fo(n, s, d);
@@ -166,18 +121,14 @@ float descida_best_improvement(int n, vector<int> &s, float **d) {
     inicio_CPU = fim_CPU = clock();
     iter = 0;
     imprime_fo((char *) "DescidaBI.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
-    vector<int> nao_visitados;
-    nao_visitados.reserve(n);
-    for (int i = 0; i < n; ++i)
-        nao_visitados.push_back(i);
 
-    vector<int>::iterator ptr;
-    for (ptr = nao_visitados.begin(); ptr < nao_visitados.end(); ptr++) {
-        fo_viz = best_improvement(n, s, d, fo, *ptr, &melhor_j);
+    while (deve_continuar) {
+        fo_viz = melhor_vizinho(n, s, d, fo, &melhor_i, &melhor_j);
         if (fo_viz < fo) {
-            swap(s[*ptr], s[melhor_j]);
+            swap(s[melhor_i], s[melhor_j]);
+        } else {
+            deve_continuar = false;
         }
-        nao_visitados.erase(ptr);
     }
 
     fo = calcula_fo(n, s, d);
@@ -200,8 +151,8 @@ float descida_randomica(int n, vector<int> &s, float **d, int IterMax) {
 
     while (iter < IterMax) {
         iter++;
-        fo_viz = vizinho_aleatorio(n,s,d,fo,&melhor_i,&melhor_j);
-        if (fo > fo_viz){
+        fo_viz = vizinho_aleatorio(n, s, d, fo, &melhor_i, &melhor_j);
+        if (fo > fo_viz) {
             swap(s[melhor_i], s[melhor_j]);
         }
     }
@@ -214,31 +165,42 @@ float descida_randomica(int n, vector<int> &s, float **d, int IterMax) {
 }
 
 
-
 float vizinho_first_improvement(int n, vector<int> &s, float **d, float fo, int *melhor_i, int *melhor_j) {
-    float fo_melhor_viz = fo;
-    bool melhorou = false;
-    vector<int> vet;
+    float fo_viz;
 
-    for (int i = 0; i < n; i++) vet.push_back(i);
-    //Para c++ 11
-    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-    default_random_engine r(seed);
-    shuffle(vet.begin(), vet.end(), r);
-    //Para c++ 98
-    //random_shuffle ( vet.begin(), vet.end() );
+    vector<int> aux = getShuffledVector(n);
 
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            // Calcula a variacao de custo com a realizacao do movimento
+            float delta1 = calcula_delta(n, aux, d, aux[i], aux[j]);
 
-    // retornar a distancia do melhor vizinho
-    return fo_melhor_viz;
+            // Faz o movimento
+            swap(s[aux[i]], s[aux[i]]);
 
+            float delta2 = calcula_delta(n, aux, d, aux[i], aux[j]);
+
+            // Calcular a nova distancia
+            fo_viz = fo - delta1 + delta2;
+
+            // Armazenar o melhor movimento (melhor troca)
+            if (fo_viz < fo) {
+                *melhor_i = aux[i];
+                *melhor_j = aux[j];
+                swap(s[aux[i]], s[aux[j]]);
+                return fo_viz;
+            }
+        }
+    }
+
+    return fo;
 }//melhor_vizinho
 
 
 float descida_first_improvement(int n, vector<int> &s, float **d) {
     int aux, melhor_i, melhor_j, iter;
     float fo_viz, fo;
-    bool melhorou;
+    bool deve_continuar = true;
     clock_t inicio_CPU, fim_CPU;
 
     fo = fo_viz = calcula_fo(n, s, d);
@@ -247,18 +209,13 @@ float descida_first_improvement(int n, vector<int> &s, float **d) {
     iter = 0;
     imprime_fo((char *) "DescidaFI.txt", (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC, fo, iter);
 
-    vector<int> nao_visitados;
-    nao_visitados.reserve(n);
-    for (int i = 0; i < n; ++i)
-        nao_visitados.push_back(i);
-
-    vector<int>::iterator ptr;
-    for (ptr = nao_visitados.begin(); ptr < nao_visitados.end(); ptr++) {
-        fo_viz = first_improvement(n, s, d, fo, *ptr, &melhor_j);
+    while (deve_continuar) {
+        fo_viz = vizinho_first_improvement(n, s, d, fo, &melhor_i, &melhor_j);
         if (fo_viz < fo) {
-            swap(s[*ptr], s[melhor_j]);
+            swap(s[melhor_i], s[melhor_j]);
+        } else {
+            deve_continuar = false;
         }
-        nao_visitados.erase(ptr);
     }
 
     fo = calcula_fo(n, s, d);
