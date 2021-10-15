@@ -14,6 +14,7 @@
 #include "src/Menus.h"
 #include "src/Descida.h"
 #include "src/MS.h"
+#include "src/SA.h"
 
 //---------------------------------------------------------------------------
 using namespace std;
@@ -23,7 +24,6 @@ char *nome_arquivo_data = (char *) "/home/joao/CLionProjects/BCC466/data/c50.txt
 
 
 int main(int argc, char *argv[]) {
-    cout << "testeeeeeeeeeeeeeeee";
     int n;                    // numero de cidades
     vector<int> s;            // vetor solucao corrente
     float **d,                // matriz de distancias entre as cidades
@@ -134,7 +134,15 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 6: /* Simulated Annealing */
-                printf("Nao implementado\n");
+                inicio_CPU = clock();
+                temp = temperaturaInicial(n, s, d, 2,0.95, 10 * n, 10);
+                printf("tempo: %f ", temp);
+                fo = SA(n,s,d,0.98,50*n,temp,0.001);
+                fim_CPU = clock();
+                printf("\nSolucao obtida usando a estrategia Simulated Annealing:\n");
+                imprime_rota(s, n);
+                printf("Funcao objetivo = %f\n", fo);
+                printf("Tempo de CPU = %f segundos:\n", (double) (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC);
                 break;
 
             case 7: /* Busca Tabu */
