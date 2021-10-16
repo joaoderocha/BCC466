@@ -70,6 +70,21 @@ int menu_GRASP(void)
   return escolha;
 }
 
+/* Menu GRASP 2*/
+int menu_GRASP_2(void)
+{
+  int escolha;
+
+  do {
+    cout << "\n*******************Menu GRASP************************* \n"  <<
+         "                1. GRASP \n" <<
+         "                2. R_GRASP \n" <<
+         "                Escolha: ";
+    cin >> escolha;
+  } while (escolha < 1 || escolha > 2);
+  return escolha;
+}
+
 
 /* Menu Algoritmos Geneticos */
 int menu_AG(void)

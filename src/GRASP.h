@@ -7,9 +7,9 @@
 
 #include <vector>
 
-float GRASP(int n, std::vector<int> &s, float **d, float alpha, int GRASP_max /*, int tipo_construcao*/);
+float GRASP(int n, std::vector<int> &s, float **d, float alpha, int GRASP_max, void (*funcao_construcao)(int, std::vector<int>&, float**, float));
 
 /* GRASP REATIVO */
-//float R_GRASP(int n, std::vector<int> &s, float **d, float alpha[], int GRASP_max /*, int tipo_construcao*/);
+float R_GRASP(int n, std::vector<int> &s, float **d, float alpha, int GRASP_max, void (*funcao_construcao)(int, std::vector<int>&, float**, float));
 
 #endif //_PCV_C_GRASP_H_

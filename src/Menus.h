@@ -5,8 +5,10 @@ int menu_solucao_inicial(void);
 int menu_principal(void);
 
 /* Menu GRASP */
-int menu_GRASP(void);
 
+int menu_GRASP(void);
+
+int menu_GRASP_2();
 
 /* Menu Algoritmos Geneticos */
 int menu_AG(void);

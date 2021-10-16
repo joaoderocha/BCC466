@@ -15,6 +15,7 @@
 #include "src/Descida.h"
 #include "src/MS.h"
 #include "src/SA.h"
+#include "src/GRASP.h"
 
 //---------------------------------------------------------------------------
 using namespace std;
@@ -125,7 +126,7 @@ int main(int argc, char *argv[]) {
 
             case 5: /* Multi-Start */
                 inicio_CPU = clock();
-                fo = MS(n, s, d, 10*n);
+                fo = MS(n, s, d, 10 * n);
                 fim_CPU = clock();
                 printf("\nSolucao obtida usando a estrategia Multi-Start:\n");
                 imprime_rota(s, n);
@@ -135,9 +136,9 @@ int main(int argc, char *argv[]) {
 
             case 6: /* Simulated Annealing */
                 inicio_CPU = clock();
-                temp = temperaturaInicial(n, s, d, 2,0.95, 10 * n, 10);
+                temp = temperaturaInicial(n, s, d, 2, 0.95, 10 * n, 10);
                 printf("tempo: %f ", temp);
-                fo = SA(n,s,d,0.98,50*n,temp,0.001);
+                fo = SA(n, s, d, 0.98, 50 * n, temp, 0.001);
                 fim_CPU = clock();
                 printf("\nSolucao obtida usando a estrategia Simulated Annealing:\n");
                 imprime_rota(s, n);
@@ -154,7 +155,31 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 9: /* GRASP */
-                printf("Nao implementado\n");
+                void (*funcao_construcao)(int, vector<int> &, float**, float);
+                float (*funcao_grasp)(int, std::vector<int> &, float **, float , int , void (*)(int, std::vector<int>&, float**, float));
+                switch (menu_GRASP_2()) {
+                    case 1:
+                        funcao_grasp = &GRASP;
+                        break;
+                    case 2:
+                        funcao_grasp = &R_GRASP;
+                        break;
+                }
+                switch (menu_GRASP()) {
+                    case 1:
+                        funcao_construcao = &constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo;
+                        break;
+                    case 2:
+                        funcao_construcao = &constroi_solucao_parcialmente_gulosa_insercao_mais_barata;
+                        break;
+                }
+                inicio_CPU = clock();
+                fo = funcao_grasp(n, s, d, 0.40, n * 10, funcao_construcao);
+                fim_CPU = clock();
+                printf("\nSolucao obtida usando a estrategia GRASP:\n");
+                imprime_rota(s, n);
+                printf("Funcao objetivo = %f\n", fo);
+                printf("Tempo de CPU = %f segundos:\n", (double) (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC);
                 break;
 
             case 10: /* VND */
