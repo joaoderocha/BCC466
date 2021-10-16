@@ -1,5 +1,6 @@
 #ifndef _ARQUIVOS_H_
 #define _ARQUIVOS_H_
+
 /* le um arquivo no formato num_cid coord_x coord_y e calcula as distancias d_ij  */
 void le_arq_matriz(char nomearq[], int n, float **distancia);
 
