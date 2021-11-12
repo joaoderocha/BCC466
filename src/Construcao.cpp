@@ -225,5 +225,56 @@ void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int
 
 /* Constroi uma solucao parcialmente gulosa com base no metodo da insercao mais barata */
 void constroi_solucao_parcialmente_gulosa_insercao_mais_barata(int n, vector<int> &s, float **d, float alpha) {
+    vector<int> nao_visitadas;
+    int tamanho_LC;
 
+    /* Inicio da Fase de Construcao de uma solucao */
+    for (int i = 1; i < n; i++) {
+
+        /* vou inserir um registro no final de uma lista das cidades nao visitadas */
+        nao_visitadas.push_back(i);
+
+    }
+
+    //limpa solucao corrente
+    s.clear();
+    s.push_back(0);  /* A cidade origem � a cidade 0 */
+
+
+    //Ordena lista
+    ordena_dist_crescente ordem;
+    ordem.d = d; // fornece a matriz de distancia para usar na ordenacao
+    ordem.index = s[0];
+
+    /* Ordenando a lista de cidade nao visitadas */
+    stable_sort(nao_visitadas.begin(), nao_visitadas.end(), ordem);
+
+
+    int j = 1;
+    int cidade_escolhida;
+    while (j < n) {
+
+        tamanho_LC = nao_visitadas.size();
+        //printf("Tamanho da lista de candidatos = %d \n",tamanho_LC);
+
+        //alpha = 0;
+        int tamanho_LRC = MAX(1, alpha * tamanho_LC);
+
+        //printf("Tamanho da lista restrita de candidatos = %d \n",tamanho_LRC);
+        int posicao_escolhida = rand() % tamanho_LRC;
+        cidade_escolhida = nao_visitadas[posicao_escolhida];
+        //printf("Cidade escolhida = %d \n",cidade_escolhida);
+
+        /* Insere a cidade escolhida apos a ultima cidade inserida*/
+        s.push_back(cidade_escolhida);
+        /* Apaga a cidade escolhida da lista de nao visitadas */
+        nao_visitadas.erase(nao_visitadas.begin() + posicao_escolhida);
+
+        /* Ordenando a lista de cidade nao visitadas */
+        ordem.index = cidade_escolhida; //atualiza ultima cidade inserida
+        sort(nao_visitadas.begin(), nao_visitadas.end());  //ordena pelos indices (para manter a estabilidade)
+        stable_sort(nao_visitadas.begin(), nao_visitadas.end(), ordem); //ordena pelas distancias
+
+        j++;
+    }
 }

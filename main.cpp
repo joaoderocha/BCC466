@@ -16,6 +16,7 @@
 #include "src/MS.h"
 #include "src/SA.h"
 #include "src/GRASP.h"
+#include "src/ILS.h"
 
 //---------------------------------------------------------------------------
 using namespace std;
@@ -151,7 +152,23 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 8: /* Iterated Local Search */
-                printf("Nao implementado\n");
+                switch (menu_ILS()) {
+                    case 1:
+                        inicio_CPU = clock();
+                        fo = ILS(n,s,d, 5,10);
+                        fim_CPU = clock();
+                        printf("\nSolucao obtida usando a estrategia Iterated Local Search:\n");
+                        break;
+                    case 2:
+                        inicio_CPU = clock();
+                        fo = SmartILS(n,s,d, 5,5,10);
+                        fim_CPU = clock();
+                        printf("\nSolucao obtida usando a estrategia Smart Iterated Local Search:\n");
+                        break;
+                }
+                imprime_rota(s, n);
+                printf("Funcao objetivo = %f\n", fo);
+                printf("Tempo de CPU = %f segundos:\n", (double) (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC);
                 break;
 
             case 9: /* GRASP */

@@ -10,6 +10,8 @@ int menu_GRASP(void);
 
 int menu_GRASP_2();
 
+int menu_ILS();
+
 /* Menu Algoritmos Geneticos */
 int menu_AG(void);
 
