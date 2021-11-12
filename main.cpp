@@ -17,6 +17,7 @@
 #include "src/SA.h"
 #include "src/GRASP.h"
 #include "src/ILS.h"
+#include "src/LAHC.h"
 
 //---------------------------------------------------------------------------
 using namespace std;
@@ -219,7 +220,14 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 13: /* LAHC */
-                printf("LAHC nao implementado\n");
+                inicio_CPU = clock();
+                printf("tempo: %f ", temp);
+                fo = LAHC(n,s,d,5,10000);
+                fim_CPU = clock();
+                printf("\nSolucao obtida usando a estrategia Simulated Annealing:\n");
+                imprime_rota(s, n);
+                printf("Funcao objetivo = %f\n", fo);
+                printf("Tempo de CPU = %f segundos:\n", (double) (fim_CPU - inicio_CPU) / CLOCKS_PER_SEC);
                 break;
 
             case 14: /* Algoritmos Memeticos */
