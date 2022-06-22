@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-float LAHC(int n, vector<int> &s, float **d,
+float LAHC(int n, vector<int> &s, vector<vector<float>>&d,
            int l,
            int m) ;
 

@@ -7,12 +7,12 @@
 
 #include <vector>
 
-float SA(int n, std::vector<int> &s, float **d, 
-	     float alpha, int SAmax, double temp_inicial,
-	     double temp_final);
+float SA(int n, std::vector<int> &s, std::vector<std::vector<float>> &d,
+         float alpha, int SAmax, double temp_inicial,
+         double temp_final);
 
-float temperaturaInicial(int n, std::vector<int> &s, float **d, 
-	                     float beta, float gama, float SAmax,
-	                     double temp_inicial);
+float temperaturaInicial(int n, std::vector<int> &s, std::vector<std::vector<float>> &d,
+                         float beta, float gama, float SAmax,
+                         double temp_inicial);
 
 #endif //PCV_SA_H

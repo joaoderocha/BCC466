@@ -1,8 +1,12 @@
 #ifndef _ARQUIVOS_H_
 #define _ARQUIVOS_H_
 
+#include "vector"
+
+using namespace std;
+
 /* le um arquivo no formato num_cid coord_x coord_y e calcula as distancias d_ij  */
-void le_arq_matriz(char nomearq[], int n, float **distancia);
+void le_arq_matriz(char nomearq[], int n, vector<vector<float>> &distancia);
 
 /* le um arquivo no formato "numero_cidades melhor_valor" */
 void obter_parametros_pcv(char nomearq[], int *n, float *melhor_valor);

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-float SA(int n, std::vector<int> &s, float **d, float alpha,
+float SA(int n, std::vector<int> &s, vector<vector<float>>& d, float alpha,
          int SAmax, double temp_inicial, double temp_final) {
     float fo, fo_viz, fo_star;
     int melhor_i, melhor_j, aux;
@@ -63,7 +63,7 @@ float SA(int n, std::vector<int> &s, float **d, float alpha,
     return fo_star;
 }
 
-float temperaturaInicial(int n, std::vector<int> &s, float **d,
+float temperaturaInicial(int n, std::vector<int> &s, vector<vector<float>>& d,
                          float beta, float gama, float SAmax,
                          double temp_inicial) {
     double temp = temp_inicial;

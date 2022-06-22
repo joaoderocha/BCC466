@@ -14,7 +14,7 @@ vector<int> getShuffledVector(int n);
 
 using namespace std;
 
-float calcula_delta(int n, vector<int> &s, float **d, int i, int j) {
+float calcula_delta(int n, vector<int> &s, vector<vector<float>> &d, int i, int j) {
     int i_antes, i_depois, j_antes, j_depois;
 
     i_antes = i - 1;
@@ -34,7 +34,7 @@ float calcula_delta(int n, vector<int> &s, float **d, int i, int j) {
 }
 
 // Encontra o melhor vizinho utilizando o movimento de troca de posicao de duas cidades
-float melhor_vizinho(int n, vector<int> &s, float **d, float fo, int *melhor_i, int *melhor_j) {
+float melhor_vizinho(int n, vector<int> &s, vector<vector<float>> &d, float fo, int *melhor_i, int *melhor_j) {
     float fo_melhor_viz = fo;
 
     float fo_viz;
@@ -80,7 +80,7 @@ vector<int> getShuffledVector(int n) {
 }
 
 //Vizinho aleatorio usado nas descidas e algumas meta-heurisiticas
-float vizinho_aleatorio(int n, vector<int> &s, float **d, float fo, int *melhor_i, int *melhor_j) {
+float vizinho_aleatorio(int n, vector<int> &s, vector<vector<float>> &d, float fo, int *melhor_i, int *melhor_j) {
     float fo_viz;
     int i, j;
     float delta1, delta2;
@@ -110,7 +110,7 @@ float vizinho_aleatorio(int n, vector<int> &s, float **d, float fo, int *melhor_
 
 
 /* Método da descida com estrategia best improvement */
-float descida_best_improvement(int n, vector<int> &s, float **d) {
+float descida_best_improvement(int n, vector<int> &s, vector<vector<float>> &d) {
     int melhor_i, melhor_j, iter;
     float fo_viz, fo;
     bool deve_continuar = true;
@@ -137,7 +137,7 @@ float descida_best_improvement(int n, vector<int> &s, float **d) {
     return fo;
 }//descida_best_improvement
 
-float descida_randomica(int n, vector<int> &s, float **d, int IterMax) {
+float descida_randomica(int n, vector<int> &s, vector<vector<float>> &d, int IterMax) {
     int iter;
     float fo, fo_viz;
 
@@ -165,7 +165,8 @@ float descida_randomica(int n, vector<int> &s, float **d, int IterMax) {
 }
 
 
-float vizinho_first_improvement(int n, vector<int> &s, float **d, float fo, int *melhor_i, int *melhor_j) {
+float
+vizinho_first_improvement(int n, vector<int> &s, vector<vector<float>> &d, float fo, int *melhor_i, int *melhor_j) {
     float fo_viz;
 
     vector<int> aux = getShuffledVector(n);
@@ -197,7 +198,7 @@ float vizinho_first_improvement(int n, vector<int> &s, float **d, float fo, int 
 }//melhor_vizinho
 
 
-float descida_first_improvement(int n, vector<int> &s, float **d) {
+float descida_first_improvement(int n, vector<int> &s, vector<vector<float>> &d) {
     int aux, melhor_i, melhor_j, iter;
     float fo_viz, fo;
     bool deve_continuar = true;

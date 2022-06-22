@@ -6,6 +6,6 @@
 #define _MS_H_
 #include <vector>
 
-float MS(int n, std::vector<int> &s, float **d, int iter_max);
+float MS(int n, std::vector<int> &s, std::vector<std::vector<float>> &d, int iter_max);
 
 #endif //PCV_C_MS_H

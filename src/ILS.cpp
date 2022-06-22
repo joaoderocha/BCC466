@@ -2,7 +2,7 @@
 #include "Descida.h"
 #include "Util.h"
 
-float perturbacao(int n, vector<int> &s, float **d, float fo, int nivel) {
+float perturbacao(int n, vector<int> &s, vector<vector<float>> &d, float fo, int nivel) {
     vector<int> s_parc = s;
     int melhor_i, melhor_j;
     int cont = 0;
@@ -19,7 +19,7 @@ float perturbacao(int n, vector<int> &s, float **d, float fo, int nivel) {
 }
 
 
-float ILS(int n, vector<int> &s, float **d,
+float ILS(int n, vector<int> &s, vector<vector<float>> &d,
           int nivel, // nro de vezes sem melhora em um dado nivel
           int ILSmax) {
     int iter = nivel = 0;
@@ -45,7 +45,7 @@ float ILS(int n, vector<int> &s, float **d,
 }
 
 
-float SmartILS(int n, vector<int> &s, float **d,
+float SmartILS(int n, vector<int> &s, vector<vector<float>> &d,
                int nivel,
                int nVezesNivel,
                int ILSMax) {
@@ -66,11 +66,11 @@ float SmartILS(int n, vector<int> &s, float **d,
             nivel = 1;
             nvezes = 1;
         } else {
-            if (nvezes >= nVezesNivel){
-                nivel+=1;
+            if (nvezes >= nVezesNivel) {
+                nivel += 1;
                 nvezes = 1;
-            }else{
-                nvezes+=1;
+            } else {
+                nvezes += 1;
             }
         }
     }

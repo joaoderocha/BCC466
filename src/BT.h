@@ -8,13 +8,13 @@
 #include <vector>
 using namespace std;
 
-float BT(int n, vector<int> &s, float **d,
+float BT(int n, vector<int> &s, vector<vector<float>> &d,
          int tamanho_maximo_lista, int BTmax);
 
 /*
  * Função melhor vizinho alterada para verificar se o movimento é tabu
  */
-float melhor_vizinho_BT(int n, vector<int> &s, float **d, float fo,
+float melhor_vizinho_BT(int n, vector<int> &s, vector<vector<float>>&, float fo,
                         int *melhor_i,
                         int *melhor_j,
                         float fo_star,

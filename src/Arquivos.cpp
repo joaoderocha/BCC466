@@ -10,7 +10,7 @@
 using namespace std;
 
 /* le um arquivo no formato num_cid coord_x coord_y e calcula as distancias d_ij  */
-void le_arq_matriz(char nomearq[], int n, float **distancia) {
+void le_arq_matriz(char nomearq[], int n, vector<vector<float>>& distancia) {
     int *vet_x, *vet_y;
     int x, y, i, j;
     FILE *arquivo;

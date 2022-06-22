@@ -122,7 +122,7 @@ void imprime_rota(vector<int> &s, int n) {
 
 
 /* calcula a funcao objetivo */
-float calcula_fo(int n, vector<int> &s, float **distancia) {
+float calcula_fo(int n, vector<int> &s, vector<vector<float>> &distancia) {
     float dist_percorrida = 0;
 
     for (int j = 0; j < n - 1; j++) {

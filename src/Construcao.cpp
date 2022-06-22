@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void constroi_solucao(int n, vector<int> &s, float **distancia) {
+void constroi_solucao(int n, vector<int> &s) {
     s.clear(); // limpa solucao
     //insere todas cidades sequencialmente
     for (int j = 0; j < n; j++) s.push_back(j);
@@ -18,14 +18,13 @@ void constroi_solucao(int n, vector<int> &s, float **distancia) {
 
 /* Constroi uma solucao de forma gulosa, no caso,
    implementa o Metodo construtivo do vizinho mais proximo */
-void constroi_solucao_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float **d) {
+void constroi_solucao_gulosa_vizinho_mais_proximo(int n, vector<int> &s, vector<vector<float>> &d) {
     vector<int> nao_visitada; //lista das cidades ainda nao visitadas
 
 
     // inserir um elemento no final de uma lista
     for (int i = 1; i < n; i++)
         nao_visitada.push_back(i);
-
 
     s.clear(); // limpa solucao
     int origem = 0;
@@ -58,9 +57,9 @@ void constroi_solucao_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float *
 
 
 /* Constroi uma solucao de forma aleatoria */
-void constroi_solucao_aleatoria(int n, vector<int> &s, float **d) {
+void constroi_solucao_aleatoria(int n, vector<int> &s) {
 
-    constroi_solucao(n, s, d);
+    constroi_solucao(n, s);
 
     //Para c++ 11
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
@@ -73,7 +72,7 @@ void constroi_solucao_aleatoria(int n, vector<int> &s, float **d) {
 }
 
 /* Constroi uma solucao pela insercao mais barata */
-void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, float **d) {
+void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, vector<vector<float>> &d) {
     vector<int> nao_visitada;
 
     /* Inicio da Fase de Construcao de uma solucao */
@@ -167,7 +166,8 @@ void constroi_solucao_gulosa_insercao_mais_barata(int n, vector<int> *s, float *
 }
 
 /* Constroi uma solucao parcialmente gulosa pelo metodo do vizinho mais proximo */
-void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int> &s, float **d, float alpha) {
+void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int> &s, vector<vector<float>> &d,
+                                                               float alpha) {
 
     vector<int> nao_visitadas;
     int tamanho_LC;
@@ -224,7 +224,8 @@ void constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(int n, vector<int
 }
 
 /* Constroi uma solucao parcialmente gulosa com base no metodo da insercao mais barata */
-void constroi_solucao_parcialmente_gulosa_insercao_mais_barata(int n, vector<int> &s, float **d, float alpha) {
+void constroi_solucao_parcialmente_gulosa_insercao_mais_barata(int n, vector<int> &s, vector<vector<float>> &d,
+                                                               float alpha) {
     vector<int> nao_visitadas;
     int tamanho_LC;
 

@@ -30,8 +30,7 @@ char *nome_arquivo_data = (char *) "/home/joao/CLionProjects/BCC466/data/c50.txt
 int main(int argc, char *argv[]) {
     int n;                    // numero de cidades
     vector<int> s;            // vetor solucao corrente
-    float **d,                // matriz de distancias entre as cidades
-    fo,                 // funcao objetivo corrente
+    float fo,                 // funcao objetivo corrente
     melhor_fo_lit;      // melhor fo da literatura
     clock_t inicio_CPU,       // clock no inicio da aplicacao do metodo
     fim_CPU;          // clock no final da aplicacao do metodo
@@ -50,9 +49,15 @@ int main(int argc, char *argv[]) {
 
 
     obter_parametros_pcv(nome_arquivo_info, &n, &melhor_fo_lit);
-    d = cria_matriz_float(n, n); // matriz de distancias
+    vector<vector<float>> d(n, vector<float>(n, 0));                // matriz de distancias entre as cidades
     le_arq_matriz(nome_arquivo_data, n, d);
 
+    for (const auto& i: d) {
+        for (auto j: i) {
+            cout << j << " ";
+        }
+        cout << endl;
+    }
 
     int escolha = 0;
     do {
@@ -72,7 +77,7 @@ int main(int argc, char *argv[]) {
                         break;
                     case 2: /* Geracao parcialmente gulosa de uma solucao inicial via metodo do vizinho mais proximo */
                         alpha = 0.1;
-                        constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(n, s, d, alpha);
+//                        constroi_solucao_parcialmente_gulosa_vizinho_mais_proximo(n, s, d, alpha);
                         fo = calcula_fo(n, s, d);
                         printf("\nSolucao construida de forma parcialmente gulosa (Vizinho Mais Proximo):\n");
                         imprime_rota(s, n);
@@ -89,7 +94,7 @@ int main(int argc, char *argv[]) {
                         printf("Ainda nao implementado...\n");
                         break;
                     case 5: /* Geracao aleatoria de uma solucao inicial */
-                        constroi_solucao_aleatoria(n, s, d);
+                        constroi_solucao_aleatoria(n, s);
                         fo = calcula_fo(n, s, d);
                         printf("\nSolucao construida de forma aleatoria:\n");
                         imprime_rota(s, n);
@@ -163,13 +168,13 @@ int main(int argc, char *argv[]) {
                 switch (menu_ILS()) {
                     case 1:
                         inicio_CPU = clock();
-                        fo = ILS(n,s,d, 5,10);
+                        fo = ILS(n, s, d, 5, 10);
                         fim_CPU = clock();
                         printf("\nSolucao obtida usando a estrategia Iterated Local Search:\n");
                         break;
                     case 2:
                         inicio_CPU = clock();
-                        fo = SmartILS(n,s,d, 5,5,10);
+                        fo = SmartILS(n, s, d, 5, 5, 10);
                         fim_CPU = clock();
                         printf("\nSolucao obtida usando a estrategia Smart Iterated Local Search:\n");
                         break;
@@ -180,8 +185,9 @@ int main(int argc, char *argv[]) {
                 break;
 
             case 9: /* GRASP */
-                void (*funcao_construcao)(int, vector<int> &, float**, float);
-                float (*funcao_grasp)(int, std::vector<int> &, float **, float , int , void (*)(int, std::vector<int>&, float**, float));
+                void (*funcao_construcao)(int, vector<int> &, vector<vector<float>> &, float);
+                float (*funcao_grasp)(int, std::vector<int> &, vector<vector<float>> &, float, int,
+                                      void (*)(int, std::vector<int> &, vector<vector<float>> &, float));
                 switch (menu_GRASP_2()) {
                     case 1:
                         funcao_grasp = &GRASP;
@@ -229,7 +235,7 @@ int main(int argc, char *argv[]) {
             case 13: /* LAHC */
                 inicio_CPU = clock();
                 printf("tempo: %f ", temp);
-                fo = LAHC(n,s,d,5,10000);
+                fo = LAHC(n, s, d, 5, 10000);
                 fim_CPU = clock();
                 printf("\nSolucao obtida usando a estrategia Simulated Annealing:\n");
                 imprime_rota(s, n);
@@ -252,8 +258,6 @@ int main(int argc, char *argv[]) {
     } while (escolha != 0);
 
 
-    //libera_vetor(s);
-    libera_matriz_float(d, n);
     return 0;
 }
 

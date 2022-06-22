@@ -11,7 +11,7 @@
 #include "Descida.h"
 #include "Arquivos.h"
 
-float GRASP(int n, std::vector<int> &s, float **d, float alpha, int GRASP_max, void (*funcao_construcao)(int, std::vector<int>&, float**, float)) {
+float GRASP(int n, std::vector<int> &s, vector<vector<float>>& d, float alpha, int GRASP_max, void (*funcao_construcao)(int, std::vector<int>&, vector<vector<float>>&, float)) {
     vector<int> s_star;
     int iter = 0;
     float fo_star = INT16_MAX;
@@ -35,7 +35,7 @@ float GRASP(int n, std::vector<int> &s, float **d, float alpha, int GRASP_max, v
 }
 
 /* ainda nao funciona */
-float R_GRASP(int n, std::vector<int> &s, float **d, float alpha, int GRASP_max, void (*funcao_construcao)(int, std::vector<int>&, float**, float)){
+float R_GRASP(int n, std::vector<int> &s, vector<vector<float>>& d, float alpha, int GRASP_max, void (*funcao_construcao)(int, std::vector<int>&, vector<vector<float>>&, float)){
     vector<int> s_star;
     int iter = 0;
     float fo_star = INT16_MAX;
