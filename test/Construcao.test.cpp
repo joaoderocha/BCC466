@@ -10,7 +10,7 @@
 
 using namespace std;
 
-TEST_CASE("Caso de teste para os métodos construtivos") {
+TEST_CASE("Caso de teste para os métodos construtivos", "[ALL]") {
     vector<vector<float>> d{{0,       13.8924, 21.0238, 32.5576, 17.2047},
                             {13.8924, 0,       12.3693, 19.2094, 31.0644},
                             {21.0238, 12.3693, 0,       15.2971, 37.0135},
